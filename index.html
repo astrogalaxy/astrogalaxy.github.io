@@ -3,844 +3,658 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Astro's Spaceship — Commissioni & Portfolio</title>
+<title>Astro Galaxy — Commissioni & Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #050508;
-    --surface: #0f0f14;
-    --surface2: #17171f;
-    --border: rgba(255,255,255,0.07);
-    --text: #f0f0f5;
-    --muted: #8888aa;
-    --accent: #c8a2e8;
-    --accent2: #7eb8f7;
-    --accent3: #f7a7c8;
-    --glow: rgba(200,162,232,0.15);
-    --radius: 20px;
-  }
+:root {
+  --bg: #06060a;
+  --s1: #0e0e14;
+  --s2: #15151d;
+  --s3: #1c1c27;
+  --border: rgba(255,255,255,0.07);
+  --text: #ededf5;
+  --muted: #7777a0;
+  --soft: #aaaac8;
+  --accent: #b89ee8;
+  --blue:  #7ab4f5;
+  --pink:  #f0a0c8;
+  --green: #7de8c0;
+  --r: 18px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* Fix per nascondere il cursore di default anche su elementi interattivi */
+a, button, input, textarea, [role="button"] { cursor: none !important; }
 
-  html { scroll-behavior: smooth; }
+#cur{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen}
+#ring{width:34px;height:34px;border:1px solid rgba(184,158,232,.35);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .3s,height .3s,border-color .3s}
+body:has(a:hover) #ring,body:has(button:hover) #ring, body:has(.g-item:hover) #ring {width:50px;height:50px;border-color:var(--accent)}
+@media(hover:none){#cur,#ring{display:none}body{cursor:auto}}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
+/* Grana rimpicciolita con background-size */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");background-size:150px;pointer-events:none;z-index:0}
 
-  /* CUSTOM CURSOR */
-  .cursor {
-    width: 10px; height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease;
-    mix-blend-mode: screen;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1px solid rgba(200,162,232,0.4);
-    border-radius: 50%;
-    position: fixed; top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transition: transform 0.4s cubic-bezier(0.25,1,0.5,1), width 0.3s, height 0.3s, border-color 0.3s;
-  }
-  body:has(a:hover) .cursor-ring,
-  body:has(button:hover) .cursor-ring {
-    width: 52px; height: 52px;
-    border-color: var(--accent);
-  }
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 52px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,10,.75);backdrop-filter:blur(22px) saturate(180%);border-bottom:1px solid var(--border)}
+.logo{font-family:'Playfair Display',serif;font-size:1rem;text-decoration:none;color:var(--text);letter-spacing:.04em}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;transition:color .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--accent);color:#08001a;padding:9px 22px;border-radius:100px;font-size:.8rem;font-weight:500;text-decoration:none;letter-spacing:.04em;transition:opacity .3s,transform .3s}
+.nav-cta:hover{opacity:.85;transform:scale(1.04)}
+@media(max-width:768px){nav{padding:16px 20px}.nav-links{display:none}}
 
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0; opacity: 0.4;
-  }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden}
+.aurora{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(184,158,232,.13) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 15% 85%,rgba(122,180,245,.09) 0%,transparent 55%),radial-gradient(ellipse 40% 28% at 85% 75%,rgba(240,160,200,.07) 0%,transparent 50%);animation:aur 9s ease-in-out infinite alternate}
+@keyframes aur{0%{opacity:1;transform:scale(1)}100%{opacity:.7;transform:scale(1.06)}}
+.eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:26px;opacity:0;animation:up .8s .2s forwards}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7.5vw,6rem);line-height:1.06;letter-spacing:-.02em;max-width:860px;opacity:0;animation:up .9s .35s forwards}
+.hero-title em{font-style:italic;background:linear-gradient(130deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{margin-top:26px;font-size:1rem;color:var(--muted);max-width:500px;line-height:1.75;opacity:0;animation:up .9s .5s forwards}
+.hero-actions{margin-top:44px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center;opacity:0;animation:up .9s .65s forwards}
+.btn-p{background:var(--accent);color:#08001a;padding:14px 34px;border-radius:100px;font-size:.9rem;font-weight:500;text-decoration:none;transition:opacity .3s,transform .3s,box-shadow .3s;box-shadow:0 0 40px rgba(184,158,232,.22)}
+.btn-p:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 55px rgba(184,158,232,.38)}
+.btn-g{color:var(--text);padding:14px 26px;border-radius:100px;font-size:.9rem;text-decoration:none;border:1px solid var(--border);transition:border-color .3s,background .3s}
+.btn-g:hover{border-color:var(--accent);background:rgba(184,158,232,.07)}
+.scroll-hint{margin-top:72px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:up 1s 1.1s forwards;color:var(--muted);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase}
+.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--accent),transparent);animation:sl 2.2s ease-in-out infinite}
+@keyframes sl{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.5);opacity:.4}}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 20px 48px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(5,5,8,0.7);
-    backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.05em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta {
-    background: var(--accent);
-    color: #0a0010;
-    padding: 9px 22px;
-    border-radius: 100px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: opacity 0.3s, transform 0.3s;
-  }
-  .nav-cta:hover { opacity: 0.85; transform: scale(1.03); }
+/* LAYOUT */
+.wrap{max-width:1180px;margin:0 auto;padding:0 48px}
+@media(max-width:768px){.wrap{padding:0 22px}}
+.s-label{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,3.5vw,2.7rem);line-height:1.15;margin-bottom:14px}
+.s-sub{color:var(--muted);font-size:.95rem;line-height:1.75;max-width:480px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .85s cubic-bezier(.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+hr.div{border:none;border-top:1px solid var(--border);margin:0}
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 120px 24px 80px;
-    position: relative;
-    overflow: hidden;
-  }
+/* ABOUT */
+.about{padding:110px 0}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+@media(max-width:768px){.about-inner{grid-template-columns:1fr;gap:40px}}
+.about-note{margin-top:28px;padding:22px 24px;background:var(--s1);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);font-size:.88rem;color:var(--soft);line-height:1.7}
+.about-note strong{color:var(--accent)}
+.about-pay{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+.pay-tag{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--s2);border:1px solid var(--border);border-radius:100px;font-size:.8rem;color:var(--soft)}
+.about-visual{background:var(--s1);border:1px solid var(--border);border-radius:24px;padding:36px;display:flex;flex-direction:column;gap:0}
+.av-row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.av-row:last-child{border-bottom:none}
+.av-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.av-icon.v{background:rgba(184,158,232,.12)}
+.av-icon.b{background:rgba(122,180,245,.12)}
+.av-icon.p{background:rgba(240,160,200,.12)}
+.av-icon.g{background:rgba(125,232,192,.12)}
+.av-info strong{display:block;font-size:.9rem;font-weight:500;margin-bottom:2px}
+.av-info span{font-size:.8rem;color:var(--muted)}
 
-  /* AURORA BG */
-  .hero::after {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,162,232,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(126,184,247,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse 40% 30% at 80% 70%, rgba(247,167,200,0.07) 0%, transparent 50%);
-    pointer-events: none;
-    animation: aurora 8s ease-in-out infinite alternate;
-  }
-  @keyframes aurora {
-    0%   { opacity: 1; transform: scale(1); }
-    100% { opacity: 0.7; transform: scale(1.05); }
-  }
+/* SERVICES */
+.srv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;background:var(--border);border-radius:22px;overflow:hidden}
+.srv-card{background:var(--s1);padding:40px 34px;position:relative;overflow:hidden;transition:background .35s}
+.srv-card:hover{background:var(--s2)}
+.srv-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);transform:scaleX(0);transition:transform .5s}
+.srv-card:hover::after{transform:scaleX(1)}
+.srv-icon{font-size:1.7rem;margin-bottom:20px;display:block}
+.srv-name{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:10px}
+.srv-desc{color:var(--muted);font-size:.87rem;line-height:1.7;margin-bottom:20px}
+.tags{display:flex;flex-wrap:wrap;gap:7px}
+.tag{font-size:.7rem;letter-spacing:.06em;padding:4px 11px;border-radius:100px;border:1px solid var(--border);color:var(--muted)}
+.tag.a{border-color:rgba(184,158,232,.3);color:var(--accent)}
+.tag.b{border-color:rgba(122,180,245,.3);color:var(--blue)}
+.tag.p{border-color:rgba(240,160,200,.3);color:var(--pink)}
 
-  .hero-eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s forwards;
-  }
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 6.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    max-width: 900px;
-    opacity: 0;
-    animation: fadeUp 0.9s 0.35s forwards;
-  }
-  .hero-title em {
-    font-style: italic;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .hero-sub {
-    margin-top: 28px;
-    font-size: 1.05rem;
-    color: var(--muted);
-    max-width: 520px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 0.9s 0.5s forwards;
-  }
-  .hero-actions {
-    margin-top: 48px;
-    display: flex; gap: 16px; align-items: center;
-    opacity: 0;
-    animation: fadeUp 0.9s 0.65s forwards;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: #0a0010;
-    padding: 15px 36px;
-    border-radius: 100px;
-    font-size: 0.92rem;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 40px rgba(200,162,232,0.25);
-  }
-  .btn-primary:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 60px rgba(200,162,232,0.4);
-  }
-  .btn-ghost {
-    color: var(--text);
-    padding: 15px 28px;
-    border-radius: 100px;
-    font-size: 0.92rem;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    transition: border-color 0.3s, background 0.3s;
-  }
-  .btn-ghost:hover { border-color: var(--accent); background: rgba(200,162,232,0.06); }
+/* GALLERIA */
+.gallery-filters { display:flex; gap:12px; flex-wrap:wrap; margin-bottom: 32px; }
+.f-btn { background:var(--s1); color:var(--muted); border:1px solid var(--border); padding:8px 20px; border-radius:100px; font-size:0.85rem; font-family:'DM Sans', sans-serif; transition:all 0.3s; }
+.f-btn:hover { border-color:var(--accent); color:var(--text); }
+.f-btn.active { background:var(--accent); color:#08001a; border-color:var(--accent); font-weight:500; }
+.f-btn.nsfw-btn { border-color: rgba(240,160,200,.3); }
+.f-btn.nsfw-btn:hover { border-color: var(--pink); color: var(--pink); }
+.f-btn.nsfw-btn.active { background: var(--pink); border-color: var(--pink); color: #08001a; }
 
-  .hero-scroll {
-    margin-top: 80px;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    opacity: 0;
-    animation: fadeUp 1s 1s forwards;
-    color: var(--muted); font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
-  }
-  .scroll-line {
-    width: 1px; height: 48px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: scrollLine 2s ease-in-out infinite;
-  }
-  @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.5);opacity:0.5} }
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
+.g-item { position:relative; border-radius:var(--r); overflow:hidden; border:1px solid var(--border); aspect-ratio: 4/5; background:var(--s2); transition:transform 0.4s; }
+.g-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s; opacity:0.8; }
+.g-item:hover img { transform:scale(1.05); opacity:1; }
+.g-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(6,6,10,0.9), transparent); opacity:0; transition:opacity 0.4s; display:flex; align-items:flex-end; padding:24px; }
+.g-item:hover .g-overlay { opacity:1; }
+.g-tag { background:var(--s1); border:1px solid var(--border); color:var(--text); font-size:0.7rem; padding:4px 10px; border-radius:100px; letter-spacing:0.05em; }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* PRICING */
+.toggle-wrap{display:flex;align-items:center;background:var(--s1);border:1px solid var(--border);border-radius:100px;padding:4px;width:fit-content;margin-top:28px}
+.tog-btn{padding:9px 24px;border-radius:100px;font-size:.82rem;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:background .3s,color .3s;font-family:'DM Sans',sans-serif;font-weight:400;letter-spacing:.04em}
+.tog-btn.active{background:var(--accent);color:#08001a;font-weight:500}
+.price-section{display:none}
+.price-section.show{display:block}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:20px}
+.p-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:34px 30px;position:relative;transition:transform .35s,box-shadow .35s,border-color .35s}
+.p-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.4);border-color:rgba(184,158,232,.18)}
+.p-card.feat{border-color:rgba(184,158,232,.28);background:linear-gradient(155deg,rgba(184,158,232,.07),var(--s1))}
+.p-badge{position:absolute;top:-11px;left:28px;background:var(--accent);color:#08001a;font-size:.68rem;font-weight:500;letter-spacing:.07em;padding:3px 13px;border-radius:100px}
+.p-type{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.p-name{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:18px}
+.p-tiers{list-style:none;margin-bottom:0} /* Rimosso margin-bottom per allineare senza i bottoni */
+.p-tiers li{padding:9px 0;font-size:.87rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);gap:12px}
+.p-tiers li:last-child{border-bottom:none}
+.tier-name{color:var(--muted)}
+.tier-price{color:var(--text);font-weight:500;white-space:nowrap}
+.tier-price.acc{color:var(--accent)}
+.extras-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px}
+.extra-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:28px}
+.extra-title{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:14px}
+.extra-list{list-style:none}
+.extra-list li{padding:7px 0;font-size:.86rem;color:var(--muted);border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start}
+.extra-list li::before{content:'✦';color:var(--accent);font-size:.55rem;margin-top:4px;flex-shrink:0}
+.extra-list li:last-child{border-bottom:none}
+.extra-list li strong{color:var(--text)}
+.nsfw-note{margin-top:28px;padding:20px 24px;background:rgba(240,160,200,.05);border:1px solid rgba(240,160,200,.18);border-radius:var(--r);display:flex;gap:14px;align-items:flex-start}
+.nsfw-note span{font-size:1.2rem;flex-shrink:0}
+.nsfw-note p{font-size:.86rem;color:var(--soft);line-height:1.7}
+.nsfw-note strong{color:var(--pink)}
 
-  /* SECTIONS */
-  section { position: relative; z-index: 1; }
+/* SLOTS */
+.slots-banner{background:var(--s1);border:1px solid var(--border);border-radius:22px;padding:48px 52px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;position:relative;overflow:hidden}
+.slots-banner::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--accent),var(--blue));border-radius:0 2px 2px 0}
+.slots-count{font-family:'Playfair Display',serif;font-size:3.2rem;color:var(--accent);line-height:1;margin:10px 0 16px}
+.slots-count small{font-size:1.1rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:300}
 
-  .section-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
-  .section-sub {
-    color: var(--muted);
-    font-size: 0.98rem;
-    line-height: 1.7;
-    max-width: 500px;
-  }
+/* Griglia dots sistemata per 2 righe da 5 */
+.dots{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px;width:max-content;}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--s3);border:1px solid rgba(255,255,255,.1)}
+.dot.on{background:var(--accent);box-shadow:0 0 10px rgba(184,158,232,.6)}
 
-  /* SERVICES */
-  .services {
-    padding: 120px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .services-header { margin-bottom: 64px; }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2px;
-    background: var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .service-card {
-    background: var(--surface);
-    padding: 48px 40px;
-    transition: background 0.4s;
-    position: relative;
-    overflow: hidden;
-  }
-  .service-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    transform: scaleX(0);
-    transition: transform 0.5s;
-  }
-  .service-card:hover { background: var(--surface2); }
-  .service-card:hover::before { transform: scaleX(1); }
+/* TOS */
+.tos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:52px}
+.tos-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:30px;transition:border-color .3s}
+.tos-card:hover{border-color:rgba(184,158,232,.2)}
+.tos-icon{font-size:1.4rem;margin-bottom:14px;display:block}
+.tos-h{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:10px}
+.tos-t{color:var(--muted);font-size:.86rem;line-height:1.78}
+.tos-t strong{color:var(--soft)}
 
-  .service-icon {
-    font-size: 2rem;
-    margin-bottom: 24px;
-    display: block;
-  }
-  .service-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    margin-bottom: 12px;
-  }
-  .service-desc {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
-    margin-bottom: 24px;
-  }
-  .service-types {
-    display: flex; flex-wrap: wrap; gap: 8px;
-  }
-  .tag {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    padding: 5px 12px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  .tag.accent { border-color: rgba(200,162,232,0.3); color: var(--accent); }
-
-  /* PRICING */
-  .pricing {
-    padding: 120px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .pricing-header { margin-bottom: 64px; }
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  .pricing-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 40px 36px;
-    position: relative;
-    transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
-  }
-  .pricing-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(200,162,232,0.2);
-    box-shadow: 0 24px 80px rgba(0,0,0,0.4);
-  }
-  .pricing-card.featured {
-    border-color: rgba(200,162,232,0.3);
-    background: linear-gradient(160deg, rgba(200,162,232,0.06), var(--surface));
-  }
-  .pricing-badge {
-    position: absolute; top: -12px; left: 36px;
-    background: var(--accent);
-    color: #0a0010;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    padding: 4px 14px;
-    border-radius: 100px;
-  }
-  .pricing-type {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-  .pricing-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    margin-bottom: 8px;
-  }
-  .pricing-price {
-    font-size: 2.4rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    margin: 20px 0 4px;
-    color: var(--text);
-  }
-  .pricing-price span { font-size: 1rem; color: var(--muted); }
-  .pricing-note {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 28px;
-  }
-  .pricing-features { list-style: none; margin-bottom: 32px; }
-  .pricing-features li {
-    padding: 10px 0;
-    font-size: 0.88rem;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .pricing-features li::before { content: '✦'; color: var(--accent); font-size: 0.6rem; }
-  .pricing-features li:last-child { border-bottom: none; }
-  .pricing-btn {
-    display: block;
-    text-align: center;
-    padding: 13px 24px;
-    border-radius: 100px;
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: all 0.3s;
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .pricing-btn:hover { background: rgba(200,162,232,0.1); border-color: var(--accent); }
-  .pricing-card.featured .pricing-btn {
-    background: var(--accent);
-    color: #0a0010;
-    border-color: var(--accent);
-    font-weight: 500;
-  }
-  .pricing-card.featured .pricing-btn:hover { opacity: 0.85; }
-
-  /* SLOTS STATUS */
-  .slots-section {
-    padding: 80px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .slots-banner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-    flex-wrap: wrap;
-    position: relative;
-    overflow: hidden;
-  }
-  .slots-banner::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-    background: linear-gradient(to bottom, var(--accent), var(--accent2));
-    border-radius: 0 2px 2px 0;
-  }
-  .slots-info { flex: 1; min-width: 240px; }
-  .slots-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-  }
-  .slots-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
-  .slots-visual { display: flex; flex-direction: column; align-items: flex-end; gap: 16px; }
-  .slots-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    font-weight: 400;
-    color: var(--accent);
-    line-height: 1;
-  }
-  .slots-count small { font-size: 1.2rem; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
-  .slots-dots { display: flex; gap: 8px; }
-  .slot-dot {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--border);
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .slot-dot.taken { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
-  /* TOS */
-  .tos-section {
-    padding: 120px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .tos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    margin-top: 56px;
-  }
-  .tos-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px;
-    transition: border-color 0.3s;
-  }
-  .tos-card:hover { border-color: rgba(200,162,232,0.2); }
-  .tos-icon { font-size: 1.5rem; margin-bottom: 16px; display: block; }
-  .tos-heading {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    margin-bottom: 12px;
-  }
-  .tos-text { color: var(--muted); font-size: 0.87rem; line-height: 1.75; }
-
-  /* CONTACT */
-  .contact {
-    padding: 120px 48px;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .contact-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 28px;
-    padding: 80px 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .contact-card::after {
-    content: '';
-    position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
-    width: 600px; height: 300px;
-    background: radial-gradient(ellipse, rgba(200,162,232,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .contact-card .section-title { font-size: clamp(2rem,5vw,3.5rem); }
-  .contact-card .section-sub { margin: 0 auto 40px; max-width: 480px; }
-  .contact-handle {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 28px;
-    background: rgba(200,162,232,0.08);
-    border: 1px solid rgba(200,162,232,0.2);
-    border-radius: 100px;
-    font-size: 1rem;
-    color: var(--accent);
-    text-decoration: none;
-    margin-bottom: 16px;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .contact-handle:hover { background: rgba(200,162,232,0.15); transform: scale(1.03); }
-  .contact-note { color: var(--muted); font-size: 0.82rem; margin-top: 16px; }
-
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 40px 48px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 16px;
-    color: var(--muted); font-size: 0.8rem;
-  }
-  footer a { color: var(--muted); text-decoration: none; transition: color 0.3s; }
-  footer a:hover { color: var(--text); }
-
-  /* DIVIDER */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* MOBILE */
-  @media (max-width: 768px) {
-    nav { padding: 18px 24px; }
-    .nav-links { display: none; }
-    .services, .pricing, .slots-section, .tos-section, .contact { padding: 80px 24px; }
-    footer { padding: 32px 24px; }
-    .slots-banner { padding: 32px 24px; }
-    .contact-card { padding: 48px 24px; }
-    body { cursor: auto; }
-    .cursor, .cursor-ring { display: none; }
-  }
+/* CONTACT */
+.ct-card{background:var(--s1);border:1px solid var(--border);border-radius:26px;padding:80px 52px;text-align:center;position:relative;overflow:hidden}
+.ct-card::after{content:'';position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:580px;height:280px;background:radial-gradient(ellipse,rgba(184,158,232,.09) 0%,transparent 70%);pointer-events:none}
+.ct-handle{display:inline-flex;align-items:center;gap:11px;padding:14px 28px;background:rgba(184,158,232,.08);border:1px solid rgba(184,158,232,.2);border-radius:100px;font-size:.97rem;color:var(--accent);text-decoration:none;transition:background .3s,transform .3s;margin-bottom:14px}
+.ct-handle:hover{background:rgba(184,158,232,.15);transform:scale(1.03)}
+.ct-note{color:var(--muted);font-size:.8rem}
+@media(max-width:768px){.ct-card{padding:52px 24px}}
+footer{border-top:1px solid var(--border);padding:36px 52px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;color:var(--muted);font-size:.78rem}
+footer a{color:var(--muted);text-decoration:none;transition:color .3s}
+footer a:hover{color:var(--text)}
+.footer-links{display:flex;gap:24px}
+@media(max-width:768px){footer{padding:28px 22px}}
 </style>
 </head>
 <body>
+<div id="cur"></div>
+<div id="ring"></div>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">astro's <span>spaceship</span></a>
+  <a href="#" class="logo">astro<span>_galaxy</span></a>
   <ul class="nav-links">
     <li><a href="#servizi">Servizi</a></li>
+    <li><a href="#galleria">Portfolio</a></li>
     <li><a href="#prezzi">Prezzi</a></li>
     <li><a href="#tos">T.O.S.</a></li>
-    <li><a href="#contatti">Contatti</a></li>
   </ul>
-  <a href="https://t.me/astro_galaxyy" target="_blank" class="nav-cta">Prenota uno Slot</a>
+  <a href="https://t.me/astro_galaxyy" target="_blank" class="nav-cta">Commissiona →</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <p class="hero-eyebrow">✦ Commissioni Aperte</p>
+  <div class="aurora"></div>
+  <p class="eyebrow">✦ Commissioni Aperte — 1 slot disponibile</p>
   <h1 class="hero-title">Arte che dà vita<br>ai tuoi <em>personaggi</em></h1>
   <p class="hero-sub">Illustrazioni digitali su misura — headshot, fullbody, reference sheet, sticker e animazioni. SFW & NSFW.</p>
   <div class="hero-actions">
-    <a href="https://t.me/astro_galaxyy" target="_blank" class="btn-primary">Commissiona Ora →</a>
-    <a href="#servizi" class="btn-ghost">Scopri i servizi</a>
+    <a href="https://t.me/astro_galaxyy" target="_blank" class="btn-p">Prenota uno slot →</a>
+    <a href="#servizi" class="btn-g">Scopri i servizi</a>
   </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>scorri</span>
-  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><span>scorri</span></div>
 </section>
 
-<!-- SERVICES -->
-<section class="services" id="servizi">
-  <div class="services-header reveal">
-    <p class="section-label">Cosa offro</p>
-    <h2 class="section-title">Servizi disponibili</h2>
-    <p class="section-sub">Ogni commissione è realizzata con cura e attenzione ai dettagli, partendo dalla tua visione.</p>
-  </div>
-  <div class="services-grid reveal">
-    <div class="service-card">
-      <span class="service-icon">🎨</span>
-      <h3 class="service-name">Illustrazioni</h3>
-      <p class="service-desc">Dai vita ai tuoi personaggi con illustrazioni digitali dettagliate, disponibili in tre formati.</p>
-      <div class="service-types">
-        <span class="tag accent">Headshot</span>
-        <span class="tag">Halfbody</span>
-        <span class="tag">Fullbody</span>
-        <span class="tag">SFW & NSFW</span>
+<section style="padding:110px 0" id="about">
+  <div class="wrap">
+    <div class="about-inner reveal">
+      <div>
+        <p class="s-label">Chi sono</p>
+        <h2 class="s-title">Ciao! Sono Astro_Galaxy 👋</h2>
+        <p class="s-sub">Lista prezzi aggiornata al <strong style="color:var(--text)">28/03/2026</strong>. Molte delle immagini che vedete appartengono a progetti a cui tengo molto e che raccontano il mio percorso fin qui.</p>
+        <p class="s-sub" style="margin-top:14px">Scegliendo una mia commissione, non riceverai solo un disegno, ma mi aiuterai concretamente a costruire la mia carriera. Grazie per la fiducia! &lt;3</p>
+        <div class="about-note"><strong>⚠️ Importante:</strong> Richiedendo una commissione accetti automaticamente i miei Termini di Servizio. <a href="#tos" style="color:var(--accent)">Leggili attentamente</a> prima di prenotare!</div>
+        <div class="about-pay">
+          <span class="pay-tag">💳 PayPal</span>
+          <span class="pay-tag">🏦 Bonifico</span>
+          <span class="pay-tag">🇮🇹 Fuso CET/CEST</span>
+        </div>
       </div>
-    </div>
-    <div class="service-card">
-      <span class="service-icon">📋</span>
-      <h3 class="service-name">Reference Sheet</h3>
-      <p class="service-desc">Reference sheet completi per il tuo personaggio, inclusi viste frontale e posteriore e dettagli di design.</p>
-      <div class="service-types">
-        <span class="tag accent">Character Design</span>
-        <span class="tag">Multi-view</span>
-        <span class="tag">Details</span>
-      </div>
-    </div>
-    <div class="service-card">
-      <span class="service-icon">✨</span>
-      <h3 class="service-name">Sticker & Animazioni</h3>
-      <p class="service-desc">Sticker personalizzati e piccole animazioni perfette per Telegram, Discord e social.</p>
-      <div class="service-types">
-        <span class="tag accent">Stickers</span>
-        <span class="tag">Animazioni</span>
-        <span class="tag">Telegram</span>
+      <div class="about-visual">
+        <div class="av-row"><div class="av-icon v">🖼️</div><div class="av-info"><strong>Illustrazioni</strong><span>Headshot · Halfbody · Fullbody</span></div></div>
+        <div class="av-row"><div class="av-icon b">📐</div><div class="av-info"><strong>Reference Sheets</strong><span>Fronte · F+R · Full Reference</span></div></div>
+        <div class="av-row"><div class="av-icon p">🌟</div><div class="av-info"><strong>Character Design</strong><span>Creazione OC originale</span></div></div>
+        <div class="av-row"><div class="av-icon g">✨</div><div class="av-info"><strong>Sticker & Animazioni</strong><span>Pack digitali · Loop animati</span></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="divider"></div>
+<hr class="div">
 
-<!-- SLOTS STATUS -->
-<section class="slots-section" id="slots">
-  <div class="slots-banner reveal">
-    <div class="slots-info">
-      <p class="section-label">Disponibilità attuale</p>
-      <h2 class="slots-title">Slot ancora aperti</h2>
-      <p class="slots-sub">Solo 10 slot disponibili per questo turno. Prenota il tuo posto prima che si esauriscano — contattami su Telegram per riservare.</p>
+<section style="padding:110px 0" id="servizi">
+  <div class="wrap">
+    <div class="reveal" style="margin-bottom:52px">
+      <p class="s-label">Cosa offro</p>
+      <h2 class="s-title">Servizi disponibili</h2>
+      <p class="s-sub">Ogni commissione è realizzata con cura, a partire dalla tua descrizione e dai tuoi riferimenti.</p>
     </div>
-    <div class="slots-visual">
-      <div class="slots-count">9 <small>/ 10</small></div>
-      <div class="slots-dots">
-        <div class="slot-dot taken"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
-        <div class="slot-dot"></div>
+    <div class="srv-grid reveal">
+      <div class="srv-card">
+        <span class="srv-icon">🖼️</span>
+        <h3 class="srv-name">Illustrazioni</h3>
+        <p class="srv-desc">Flat color, soft shaded o full shaded. Tre formati per ogni esigenza e budget.</p>
+        <div class="tags"><span class="tag a">Headshot</span><span class="tag">Halfbody</span><span class="tag">Fullbody</span><span class="tag b">SFW & NSFW</span></div>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">📐</span>
+        <h3 class="srv-name">Reference Sheets</h3>
+        <p class="srv-desc">Schede complete del personaggio — dalle viste base alla full reference con tutti i dettagli.</p>
+        <div class="tags"><span class="tag a">Fronte</span><span class="tag">F + Retro</span><span class="tag">Full Ref</span><span class="tag b">SFW & NSFW</span></div>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">🌟</span>
+        <h3 class="srv-name">Character Design</h3>
+        <p class="srv-desc">Creazione di un OC originale basata sulla tua descrizione. Palette, posa, tutto su misura.</p>
+        <div class="tags"><span class="tag a">OC Design</span><span class="tag">Fronte + Headshot</span><span class="tag">Full Ref</span></div>
+      </div>
+      <div class="srv-card">
+        <span class="srv-icon">✨</span>
+        <h3 class="srv-name">Sticker & Animazioni</h3>
+        <p class="srv-desc">Pack digitali singoli o da 5/10, e animazioni loop per Telegram, Discord e Twitch.</p>
+        <div class="tags"><span class="tag a">Sticker SFW</span><span class="tag b">Sticker NSFW</span><span class="tag p">Animazioni</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="pricing" id="prezzi">
-  <div class="pricing-header reveal">
-    <p class="section-label">Listino prezzi</p>
-    <h2 class="section-title">Tariffe</h2>
-    <p class="section-sub">Prezzi indicativi — un preventivo preciso viene fornito dopo aver discusso i dettagli del progetto.</p>
-  </div>
-  <div class="pricing-grid reveal">
-    <div class="pricing-card">
-      <p class="pricing-type">Illustrazione</p>
-      <h3 class="pricing-name">Headshot</h3>
-      <div class="pricing-price">da €15 <span>SFW</span></div>
-      <p class="pricing-note">Busto / testa del personaggio</p>
-      <ul class="pricing-features">
-        <li>Sketch lineare incluso</li>
-        <li>Colori piatti o shading</li>
-        <li>1 revisione inclusa</li>
-        <li>File ad alta risoluzione</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
-    </div>
-    <div class="pricing-card featured">
-      <div class="pricing-badge">Più richiesto</div>
-      <p class="pricing-type">Illustrazione</p>
-      <h3 class="pricing-name">Halfbody</h3>
-      <div class="pricing-price">da €25 <span>SFW</span></div>
-      <p class="pricing-note">Fino alla vita del personaggio</p>
-      <ul class="pricing-features">
-        <li>Sketch lineare incluso</li>
-        <li>Shading completo</li>
-        <li>Background semplice opzionale</li>
-        <li>2 revisioni incluse</li>
-        <li>File ad alta risoluzione</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
-    </div>
-    <div class="pricing-card">
-      <p class="pricing-type">Illustrazione</p>
-      <h3 class="pricing-name">Fullbody</h3>
-      <div class="pricing-price">da €40 <span>SFW</span></div>
-      <p class="pricing-note">Personaggio completo</p>
-      <ul class="pricing-features">
-        <li>Sketch lineare incluso</li>
-        <li>Shading completo</li>
-        <li>Background incluso</li>
-        <li>2 revisioni incluse</li>
-        <li>File ad alta risoluzione</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
-    </div>
-    <div class="pricing-card">
-      <p class="pricing-type">Speciali</p>
-      <h3 class="pricing-name">Reference Sheet</h3>
-      <div class="pricing-price">da €60</div>
-      <p class="pricing-note">Design completo del personaggio</p>
-      <ul class="pricing-features">
-        <li>Vista frontale e posteriore</li>
-        <li>Dettagli di design e palette colori</li>
-        <li>Expression sheet opzionale</li>
-        <li>File ad alta risoluzione</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
-    </div>
-    <div class="pricing-card">
-      <p class="pricing-type">Speciali</p>
-      <h3 class="pricing-name">Sticker Pack</h3>
-      <div class="pricing-price">da €30</div>
-      <p class="pricing-note">Pack da 5 sticker del personaggio</p>
-      <ul class="pricing-features">
-        <li>5 pose / espressioni</li>
-        <li>Formato Telegram / Discord</li>
-        <li>Sfondo trasparente</li>
-        <li>File PNG ad alta risoluzione</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
-    </div>
-    <div class="pricing-card">
-      <p class="pricing-type">Speciali</p>
-      <h3 class="pricing-name">Animazioni</h3>
-      <div class="pricing-price">su preventivo</div>
-      <p class="pricing-note">Piccole animazioni 2D</p>
-      <ul class="pricing-features">
-        <li>Loop animati</li>
-        <li>Emote animate per Twitch / Discord</li>
-        <li>Sticker animati</li>
-        <li>Preventivo personalizzato</li>
-      </ul>
-      <a href="https://t.me/astro_galaxyy" target="_blank" class="pricing-btn">Contattami</a>
+<hr class="div">
+
+<section style="padding:110px 0" id="galleria">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="s-label">Portfolio</p>
+      <h2 class="s-title">I miei ultimi lavori</h2>
+      <p class="s-sub" style="margin-bottom:32px">Esplora alcune delle mie illustrazioni e reference sheet più recenti.</p>
+      
+      <div class="gallery-filters">
+        <button class="f-btn active" data-filter="sfw">✨ SFW (Tutti)</button>
+        <button class="f-btn" data-filter="headshot">Headshot</button>
+        <button class="f-btn" data-filter="fullbody">Fullbody</button>
+        <button class="f-btn" data-filter="refsheet">Reference Sheet</button>
+        <button class="f-btn nsfw-btn" data-filter="nsfw">🔞 NSFW</button>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="g-item" data-tags="sfw headshot">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" alt="Placeholder">
+          <div class="g-overlay"><span class="g-tag">Headshot</span></div>
+        </div>
+        <div class="g-item" data-tags="sfw fullbody">
+          <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop" alt="Placeholder">
+          <div class="g-overlay"><span class="g-tag">Fullbody</span></div>
+        </div>
+        <div class="g-item" data-tags="sfw refsheet">
+          <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop" alt="Placeholder">
+          <div class="g-overlay"><span class="g-tag">Reference Sheet</span></div>
+        </div>
+        <div class="g-item" data-tags="sfw headshot">
+          <img src="https://images.unsplash.com/photo-1550684376-efcbd6e3f031?q=80&w=600&auto=format&fit=crop" alt="Placeholder">
+          <div class="g-overlay"><span class="g-tag">Headshot</span></div>
+        </div>
+
+        <div class="g-item" data-tags="nsfw fullbody">
+          <img src="https://images.unsplash.com/photo-1614850715649-1d0106293cb1?q=80&w=600&auto=format&fit=crop" alt="Placeholder NSFW">
+          <div class="g-overlay"><span class="g-tag">NSFW Fullbody</span></div>
+        </div>
+        <div class="g-item" data-tags="nsfw headshot">
+          <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=600&auto=format&fit=crop" alt="Placeholder NSFW">
+          <div class="g-overlay"><span class="g-tag">NSFW Headshot</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="divider"></div>
+<hr class="div">
 
-<!-- TOS -->
-<section class="tos-section" id="tos">
-  <div class="reveal">
-    <p class="section-label">Terms of Service</p>
-    <h2 class="section-title">Termini e condizioni</h2>
-    <p class="section-sub">Leggere attentamente prima di commissionare. Commissioning = accettazione dei T.O.S.</p>
-  </div>
-  <div class="tos-grid reveal">
-    <div class="tos-card">
-      <span class="tos-icon">💳</span>
-      <h3 class="tos-heading">Pagamento</h3>
-      <p class="tos-text">Il pagamento avviene al 100% in anticipo prima che il lavoro abbia inizio. Accetto PayPal, bonifico o altri metodi da concordare. Il pagamento è non rimborsabile una volta iniziato lo sketch.</p>
+<section style="padding:110px 0" id="prezzi">
+  <div class="wrap">
+    <div class="reveal" style="margin-bottom:52px">
+      <p class="s-label">Listino prezzi</p>
+      <h2 class="s-title">Tariffe — aggiornate al 28/03/2026</h2>
+      <p class="s-sub">Prezzi esatti dal documento ufficiale. Per contenuti NSFW è richiesta la maggiore età (18+).</p>
+      <div class="toggle-wrap">
+        <button class="tog-btn active" onclick="switchTab('sfw',this)">✦ SFW</button>
+        <button class="tog-btn" onclick="switchTab('nsfw',this)">🔞 NSFW</button>
+      </div>
     </div>
-    <div class="tos-card">
-      <span class="tos-icon">🔄</span>
-      <h3 class="tos-heading">Revisioni</h3>
-      <p class="tos-text">Le revisioni incluse riguardano correzioni minori come colori, pose leggere e piccoli aggiustamenti. Modifiche sostanziali allo sketch originale possono comportare un costo aggiuntivo.</p>
+
+    <div class="price-section show reveal" id="tab-sfw">
+      <div class="p-grid">
+        <div class="p-card">
+          <p class="p-type">Illustrazione</p>
+          <h3 class="p-name">Headshot / Icon</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">12€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">18€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">25€</span></li>
+          </ul>
+        </div>
+        <div class="p-card feat">
+          <div class="p-badge">Più richiesto</div>
+          <p class="p-type">Illustrazione</p>
+          <h3 class="p-name">Halfbody</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">20€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">28€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">35€</span></li>
+          </ul>
+        </div>
+        <div class="p-card">
+          <p class="p-type">Illustrazione</p>
+          <h3 class="p-name">Fullbody</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">45€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">52€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">60€</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-grid">
+        <div class="p-card">
+          <p class="p-type">Reference Sheet</p>
+          <h3 class="p-name">Reference Sheets</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Fronte (1 FB + 1 HS)</span><span class="tier-price">60€</span></li>
+            <li><span class="tier-name">Fronte e Retro (2 FB + 1 HS)</span><span class="tier-price">80€</span></li>
+            <li><span class="tier-name">Full Reference</span><span class="tier-price acc">110€</span></li>
+          </ul>
+        </div>
+        <div class="p-card">
+          <p class="p-type">OC originale</p>
+          <h3 class="p-name">Character Design</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Fronte + Headshot</span><span class="tier-price">90€</span></li>
+            <li><span class="tier-name">Full Reference</span><span class="tier-price acc">145€</span></li>
+          </ul>
+        </div>
+        <div class="p-card">
+          <p class="p-type">Sticker digitali SFW</p>
+          <h3 class="p-name">Sticker Pack</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Singolo SFW</span><span class="tier-price">10€</span></li>
+            <li><span class="tier-name">Pack da 5 SFW</span><span class="tier-price">40€</span></li>
+            <li><span class="tier-name">Pack da 10 <small style="color:var(--green)">+1 in omaggio!</small></span><span class="tier-price acc">85€</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="extras-row">
+        <div class="extra-card">
+          <h4 class="extra-title">✦ Extra & Aggiunte</h4>
+          <ul class="extra-list">
+            <li><strong>Personaggio aggiuntivo</strong> — +50% del prezzo base</li>
+            <li><strong>Sfondo semplice</strong> — Gratis</li>
+            <li><strong>Sfondo complesso</strong> — Prezzo da concordare</li>
+            <li><strong>Animazione</strong> — a partire da 15€</li>
+          </ul>
+        </div>
+        <div class="extra-card">
+          <h4 class="extra-title">⏳ Tempi & Pagamento</h4>
+          <ul class="extra-list">
+            <li>Consegna stimata <strong>1–4 settimane</strong></li>
+            <li>Sotto 70€: pagamento <strong>100% anticipato</strong></li>
+            <li>Sopra 70€: <strong>50% all'inizio</strong>, 50% dopo lo sketch</li>
+            <li>Possibile <strong>Rush Fee</strong> per scadenze urgenti</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="tos-card">
-      <span class="tos-icon">©️</span>
-      <h3 class="tos-heading">Copyright</h3>
-      <p class="tos-text">Mantengo il diritto di pubblicare il lavoro finito nel mio portfolio e sui miei social. Il cliente può utilizzare il lavoro per uso personale non commerciale, con credit obbligatorio.</p>
-    </div>
-    <div class="tos-card">
-      <span class="tos-icon">🔞</span>
-      <h3 class="tos-heading">Contenuti NSFW</h3>
-      <p class="tos-text">Contenuti NSFW disponibili solo per maggiorenni. Devi dichiarare la tua età al momento della commissione. Mi riservo il diritto di rifiutare qualsiasi commissione per motivi personali.</p>
-    </div>
-    <div class="tos-card">
-      <span class="tos-icon">⏳</span>
-      <h3 class="tos-heading">Tempi di consegna</h3>
-      <p class="tos-text">I tempi variano in base al tipo di commissione e al carico di lavoro attuale. Riceverai aggiornamenti regolari sullo stato del tuo lavoro. I tempi stimati vengono comunicati all'accettazione.</p>
-    </div>
-    <div class="tos-card">
-      <span class="tos-icon">🚫</span>
-      <h3 class="tos-heading">Non realizzo</h3>
-      <p class="tos-text">Non creo contenuti che coinvolgono minori in contesti inappropriati, contenuti che promuovono odio, violenza o discriminazione, né personaggi reali in contesti offensivi.</p>
+
+    <div class="price-section reveal" id="tab-nsfw">
+      <div class="nsfw-note">
+        <span>🔞</span>
+        <p><strong>Sezione per adulti (18+).</strong> Accedendo confirmi di avere almeno 18 anni. Solo personaggi Anthro/Humanoid. Non realizzo: minori, gore, feral, contenuti illegali o non consensuali.</p>
+      </div>
+      <div class="p-grid" style="margin-top:28px">
+        <div class="p-card">
+          <p class="p-type">NSFW — Illustrazione</p>
+          <h3 class="p-name">Headshot / Icon</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">15€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">20€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">30€</span></li>
+          </ul>
+        </div>
+        <div class="p-card feat">
+          <div class="p-badge">Più richiesto</div>
+          <p class="p-type">NSFW — Illustrazione</p>
+          <h3 class="p-name">Halfbody</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">27€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">35€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">45€</span></li>
+          </ul>
+        </div>
+        <div class="p-card">
+          <p class="p-type">NSFW — Illustrazione</p>
+          <h3 class="p-name">Fullbody</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Sketch + Flat color</span><span class="tier-price">55€</span></li>
+            <li><span class="tier-name">Lineart + Soft shaded</span><span class="tier-price">68€</span></li>
+            <li><span class="tier-name">Lineart + Full shaded</span><span class="tier-price acc">75€</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-grid">
+        <div class="p-card">
+          <p class="p-type">NSFW — Reference Sheet</p>
+          <h3 class="p-name">Reference Sheets</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Fronte (1 FB + 1 HS)</span><span class="tier-price">70€</span></li>
+            <li><span class="tier-name">Fronte e Retro (2 FB + 1 HS)</span><span class="tier-price">90€</span></li>
+            <li><span class="tier-name">Full Reference</span><span class="tier-price acc">120€</span></li>
+          </ul>
+        </div>
+        <div class="p-card">
+          <p class="p-type">NSFW — Sticker digitali</p>
+          <h3 class="p-name">Sticker Pack</h3>
+          <ul class="p-tiers">
+            <li><span class="tier-name">Singolo NSFW</span><span class="tier-price">15€</span></li>
+            <li><span class="tier-name">Pack da 5 NSFW</span><span class="tier-price">60€</span></li>
+            <li><span class="tier-name">Pack da 10 <small style="color:var(--green)">+1 in omaggio!</small></span><span class="tier-price acc">120€</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="extras-row">
+        <div class="extra-card">
+          <h4 class="extra-title">✦ Extra NSFW</h4>
+          <ul class="extra-list">
+            <li><strong>Personaggio aggiuntivo</strong> — +50% del prezzo base NSFW</li>
+            <li><strong>Sfondo complesso</strong> — a partire da +30€</li>
+            <li><strong>Animazione NSFW</strong> — a partire da <strong style="color:var(--pink)">60€</strong></li>
+          </ul>
+        </div>
+        <div class="extra-card">
+          <h4 class="extra-title">🚫 Non realizzo (NSFW)</h4>
+          <ul class="extra-list">
+            <li>Contenuti illegali o non consensuali</li>
+            <li>Gore — violenza eccessiva / mutilazioni</li>
+            <li>Feral (solo Anthro/Humanoid accettati)</li>
+            <li>Soggetti minorenni — anche in contesti fittizi</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section class="contact" id="contatti">
-  <div class="contact-card reveal">
-    <p class="section-label">Pronto a iniziare?</p>
-    <h2 class="section-title">Parliamo del tuo progetto</h2>
-    <p class="section-sub">Scrivimi su Telegram per un preventivo, per fare domande o per prenotare uno slot.</p>
-    <a href="https://t.me/astro_galaxyy" target="_blank" class="contact-handle">
-      <span>✈️</span> @astro_galaxyy su Telegram
-    </a>
-    <p class="contact-note">Di solito rispondo entro 24 ore · Slot limitati disponibili</p>
+<hr class="div">
+
+<section style="padding:110px 0" id="slot">
+  <div class="wrap">
+    <div class="slots-banner reveal">
+      <div>
+        <p class="s-label">Disponibilità attuale</p>
+        <h2 class="s-title" style="margin-bottom:4px">Slot disponibili</h2>
+        <div class="slots-count">1 <small>/ 10</small></div>
+        <p class="s-sub" style="max-width:380px">Solo 10 slot per turno. Scrivimi su Telegram per prenotare il tuo posto prima che si esauriscano.</p>
+        <div style="margin-top:24px"><a href="https://t.me/astro_galaxyy" target="_blank" class="btn-p">Prenota ora →</a></div>
+      </div>
+      <div class="dots" id="dots"></div>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<hr class="div">
+
+<section style="padding:110px 0" id="tos">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="s-label">Termini di servizio</p>
+      <h2 class="s-title">T.O.S. — Aggiornato al 28/03/2026</h2>
+      <p class="s-sub">Effettuando il pagamento accetti i seguenti termini. Richiedere una commissione = accettazione automatica.</p>
+    </div>
+    <div class="tos-grid reveal">
+      <div class="tos-card">
+        <span class="tos-icon">💳</span>
+        <h3 class="tos-h">Pagamento & Anticipo</h3>
+        <p class="tos-t">Accetto <strong>PayPal e Bonifico</strong>. Sotto i 70€: pagamento <strong>100% anticipato</strong>. Sopra i 70€: <strong>50% all'inizio</strong>, 50% dopo l'approvazione dello sketch. I lavori iniziano solo dopo aver ricevuto il pagamento.</p>
+      </div>
+      <div class="tos-card">
+        <span class="tos-icon">🔄</span>
+        <h3 class="tos-h">Revisioni</h3>
+        <p class="tos-t">Nella fase di bozza le <strong>modifiche sono illimitate e gratuite</strong> (entro limiti ragionevoli). A lavoro finito: <strong>2 piccole modifiche incluse</strong> (es. correzione colore, piccolo dettaglio). Modifiche strutturali a lavoro ultimato = costo extra.</p>
+      </div>
+      <div class="tos-card">
+        <span class="tos-icon">⏳</span>
+        <h3 class="tos-h">Tempi di consegna</h3>
+        <p class="tos-t">Stima: <strong>1–4 settimane</strong> a seconda della complessità. In caso di ritardi sarai avvisato subito. Per scadenze fisse comunicamelo immediatamente — potrebbe essere applicata una <strong>Rush Fee</strong>.</p>
+      </div>
+      <div class="tos-card">
+        <span class="tos-icon">©️</span>
+        <h3 class="tos-h">Diritti d'autore & Uso</h3>
+        <p class="tos-t">Mantengo i <strong>diritti d'autore</strong> e posso pubblicare il lavoro nel mio portfolio. Il cliente riceve il file HD per <strong>uso personale con credit obbligatorio</strong>. Uso commerciale, NFT e dataset AI sono <strong>vietati</strong>.</p>
+      </div>
+      <div class="tos-card">
+        <span class="tos-icon">💰</span>
+        <h3 class="tos-h">Rimborsi</h3>
+        <p class="tos-t"><strong>Rimborso totale</strong> se non ho ancora iniziato. <strong>Rimborso parziale</strong> se il lavoro è in fase avanzata. <strong>Nessun rimborso</strong> a disegno completato e consegnato.</p>
+      </div>
+      <div class="tos-card">
+        <span class="tos-icon">🚫</span>
+        <h3 class="tos-h">Non realizzo</h3>
+        <p class="tos-t">No contenuti illegali o non consensuali, no gore/mutilazioni, no soggetti minorenni, no feral (NSFW). Mi riservo il <strong>diritto di rifiutare qualsiasi commissione</strong> senza dover fornire spiegazioni.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<section style="padding:110px 0" id="contatti">
+  <div class="wrap">
+    <div class="ct-card reveal">
+      <p class="s-label">Pronto a iniziare?</p>
+      <h2 class="s-title" style="font-size:clamp(1.8rem,4vw,3rem)">Parliamo del tuo progetto</h2>
+      <p class="s-sub" style="margin:0 auto 36px">Scrivimi su Telegram con una descrizione della tua idea, il tipo di commissione desiderato e i tuoi riferimenti. Rispondo il prima possibile!</p>
+      <div>
+        <a href="https://t.me/astro_galaxyy" target="_blank" class="ct-handle">
+          <span>✈️</span> @astro_galaxyy su Telegram
+        </a>
+      </div>
+      <p class="ct-note">Fuso orario CET/CEST · Pagamenti via PayPal / Bonifico · Lista prezzi aggiornata al 28/03/2026</p>
+      <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="https://t.me/astrosspaceship" target="_blank" class="btn-g" style="font-size:.82rem;padding:10px 20px">📢 Canale Telegram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
-  <span>© 2025 astro's spaceship — Tutti i diritti riservati</span>
-  <div style="display:flex;gap:24px;">
+  <span>© 2026 Astro_Galaxy — Tutti i diritti riservati</span>
+  <div class="footer-links">
     <a href="#tos">T.O.S.</a>
-    <a href="https://t.me/astrosspaceship" target="_blank">Telegram Channel</a>
+    <a href="#prezzi">Prezzi</a>
+    <a href="https://t.me/astrosspaceship" target="_blank">Canale</a>
     <a href="https://t.me/astro_galaxyy" target="_blank">Commissioni</a>
   </div>
 </footer>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-  function animCursor() {
-    cursor.style.transform = `translate(${mx-5}px, ${my-5}px)`;
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.transform = `translate(${rx-18}px, ${ry-18}px)`;
-    requestAnimationFrame(animCursor);
-  }
-  animCursor();
+// Cursore personalizzato
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function a(){cur.style.transform=`translate(${mx-4}px,${my-4}px)`;rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.transform=`translate(${rx-17}px,${ry-17}px)`;requestAnimationFrame(a)})();
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  reveals.forEach(r => obs.observe(r));
+// Animazioni all'entrata
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+// Switch Tab Prezzi
+function switchTab(tab,btn){
+  document.querySelectorAll('.price-section').forEach(s=>s.classList.remove('show'));
+  document.querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('show');
+  btn.classList.add('active');
+}
+
+// Logica Filtri Galleria
+const filterBtns = document.querySelectorAll('.f-btn');
+const galleryItems = document.querySelectorAll('.g-item');
+
+function filterGallery(filterValue) {
+  galleryItems.forEach(item => {
+    const tags = item.getAttribute('data-tags');
+    const isNSFW = tags.includes('nsfw');
+    
+    if (filterValue === 'sfw') {
+      // Mostra tutto tranne NSFW
+      item.style.display = isNSFW ? 'none' : 'block';
+    } else if (filterValue === 'nsfw') {
+      // Mostra solo NSFW
+      item.style.display = isNSFW ? 'block' : 'none';
+    } else {
+      // Per tag specifici (headshot, fullbody), mostra solo i SFW di quella categoria
+      const matchTag = tags.includes(filterValue);
+      item.style.display = (matchTag && !isNSFW) ? 'block' : 'none';
+    }
+  });
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterGallery(btn.getAttribute('data-filter'));
+  });
+});
+
+// Avvia filtro iniziale per nascondere i NSFW
+filterGallery('sfw');
+
+// Generazione pallini Slot (1 su 10)
+const dots=document.getElementById('dots');
+for(let i=0;i<10;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i<1?' on':'');
+  dots.appendChild(d);
+}
 </script>
 </body>
 </html>
